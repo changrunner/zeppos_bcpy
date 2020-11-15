@@ -17,7 +17,9 @@ class TestTheProjectMethods(unittest.TestCase):
         self.assertEqual(sql_table.password, "p1")
 
     def test_create_method(self):
-        self.assertEqual(SqlTable("microsoft", r"localhost\sqlexpress", "master", "dbo", "staging_test").create(use_existing=True), True)
+        self.assertEqual(
+            SqlTable("microsoft", r"localhost\sqlexpress", "master", "dbo", "staging_test")
+                .create({"col1", "int"}, use_existing=True), True)
 
 
 
