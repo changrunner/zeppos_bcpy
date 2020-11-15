@@ -13,7 +13,7 @@ class Dataframe:
         bcp_temp_csv_file = BcpTempCsvFile.write_df_to_csv_creating_instance(pandas_dataframe, bcp_file_format, index)
         sql_table.create(pandas_dataframe.dtypes.to_dict(), use_existing)
         Bcp(sql_table, bcp_file_format, bcp_temp_csv_file, batch_size).execute()
-        # bcp_temp_csv_file.remove_file()
-        # bcp_file_format.remove_file()
+        bcp_temp_csv_file.remove_file()
+        bcp_file_format.remove_file()
 
 
