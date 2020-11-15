@@ -26,4 +26,4 @@ class BcpTempCsvFile:
         return True
 
     def remove_file(self):
-        remove(self.file_format_full_file_name)
+        remove(self.csv_full_file_name)
