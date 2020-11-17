@@ -1,5 +1,3 @@
-import numpy as np
-
 class SqlStatement:
     @staticmethod
     def get_table_create_statement(schema_name, table_name, column_dict, discover_data_type=False):

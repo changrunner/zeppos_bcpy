@@ -1,6 +1,6 @@
 from zeppos_bcpy.bcp_cmd import BcpCmd
 from subprocess import Popen, PIPE
-from zeppos_logging.setup_logger import logger
+from zeppos_logging.app_logger import AppLogger
 
 class Bcp:
     def __init__(self, sql_table, bcp_file_format, bcp_temp_csv_file, batch_size=10000):
@@ -14,6 +14,6 @@ class Bcp:
 
         for out_string in out_array:
             if len(out_string.strip()) > 0:
-                logger.debug(f"bcp execute result: {out_string}")
+                AppLogger.logger.debug(f"bcp execute result: {out_string}")
 
         return True
