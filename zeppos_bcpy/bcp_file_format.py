@@ -1,4 +1,3 @@
-from zeppos_logging.setup_logger import logger
 from os import remove, linesep
 
 class BcpFileFormat:

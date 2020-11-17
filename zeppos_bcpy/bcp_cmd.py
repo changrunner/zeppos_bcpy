@@ -1,5 +1,4 @@
-from os import path
-from zeppos_logging.setup_logger import logger
+from zeppos_logging.app_logger import AppLogger
 from zeppos_bcpy.sql_security import SqlSecurity
 
 class BcpCmd:
@@ -19,7 +18,7 @@ class BcpCmd:
                        ] + auth
 
 
-        logger.debug(f"bcp command: {bcp_command}")
-        logger.debug(f"bcp command: {' '.join(bcp_command)}")
+        AppLogger.logger.debug(f"bcp command: {bcp_command}")
+        AppLogger.logger.debug(f"bcp command: {' '.join(bcp_command)}")
 
         return bcp_command

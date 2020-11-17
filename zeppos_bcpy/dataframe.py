@@ -1,4 +1,3 @@
-import csv
 from zeppos_file_manager.temp_file import TempFile
 from zeppos_bcpy.bcp_file_format import BcpFileFormat
 from zeppos_bcpy.bcp_temp_csv_file import BcpTempCsvFile
