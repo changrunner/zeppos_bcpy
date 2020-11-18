@@ -18,7 +18,8 @@ class Dataframe:
     def to_sqlserver_creating_instance(
             pandas_dataframe, sql_configuration, index=False, discover_data_type=False, use_existing=False, batch_size=10000):
         dataframe = Dataframe(pandas_dataframe, sql_configuration, index, discover_data_type, use_existing, batch_size)
-        return dataframe.to_sqlserver()
+        dataframe.to_sqlserver()
+        return dataframe
 
     def to_sqlserver(self):
         bcp_file_format = BcpFileFormat.create_bcp_format_file_instance_from_dataframe(self.pandas_dataframe, TempFile().temp_full_file_name)
