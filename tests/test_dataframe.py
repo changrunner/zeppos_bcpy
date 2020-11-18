@@ -16,7 +16,7 @@ class TestTheProjectMethods(unittest.TestCase):
             schema_name="dbo",
             table_name="staging_test"
         )
-        Dataframe.to_sqlserver_creating_instance(df, sql_configuration)
+        self.assertEqual("<class 'zeppos_bcpy.dataframe.Dataframe'>", str(type(Dataframe.to_sqlserver_creating_instance(df, sql_configuration))))
 
 
 if __name__ == '__main__':
