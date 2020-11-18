@@ -1,7 +1,6 @@
 import unittest
 from zeppos_bcpy.sql_statement import SqlStatement
 import pandas as pd
-import numpy as np
 
 class TestTheProjectMethods(unittest.TestCase):
     def test_get_table_create_statement_method(self):

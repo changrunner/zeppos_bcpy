@@ -1,7 +1,7 @@
 from zeppos_bcpy.sql_statement import SqlStatement
 from zeppos_bcpy.sql_cmd import SqlCmd
 
-class SqlTable:
+class SqlConfiguration:
     def __init__(self, server_type, server_name, database_name, schema_name, table_name,
                  username=None, password=None):
         self.server_type = server_type
