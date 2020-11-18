@@ -1,4 +1,5 @@
 from os import remove, linesep
+from zeppos_data_manager.data_cleaner import DataCleaner
 
 class BcpFileFormat:
     def __init__(self, pandas_dataframe, temp_full_file_name, sep='|', quote_char='', line_terminator=linesep):
@@ -20,7 +21,7 @@ class BcpFileFormat:
         version = "14.0"
         no_of_columns = len(self.pandas_dataframe.columns)
 
-        bcp_format = BcpFileFormat._strip_content(
+        bcp_format = DataCleaner.strip_content(
             f"""
                 {version}
                 {no_of_columns}
@@ -42,9 +43,9 @@ class BcpFileFormat:
             column_collation = "SQL_Latin1_General_CP1_CI_AS"
 
             if field_index < len(self.pandas_dataframe.columns):
-                separator = BcpFileFormat._escaper(self.sep)
+                separator = DataCleaner.adjust_escape_character(self.sep)
             else:
-                separator = BcpFileFormat._escaper(self.line_terminator)
+                separator = DataCleaner.adjust_escape_character(self.line_terminator)
 
             column_format += f"{field_index} {data_type} {prefix_len} {data_length} " \
                              f"\"{separator}\" " \
@@ -53,24 +54,5 @@ class BcpFileFormat:
 
         return column_format
 
-    # todo: move to zeppos_data_manager.cleaner
-    @staticmethod
-    def _escaper(input_string):
-        return input_string.replace('"', '\\"').replace("'", "\\'") \
-            .replace('\r', '\\r').replace('\n', '\\n')
-
     def remove_file(self):
         remove(self.file_format_full_file_name)
-
-    # todo: move to zeppos_data_manager.cleaner
-    @staticmethod
-    def _strip_content(string_value, remove_last_line_seperator=True):
-        final_string = ""
-        for line in string_value.split("\n"):
-            line = line.strip()
-            if len(line):
-                final_string += line + "\n"
-        if remove_last_line_seperator:
-            return final_string[:-1]
-        else:
-            return final_string

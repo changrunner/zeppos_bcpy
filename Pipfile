@@ -17,8 +17,8 @@ pytest = ">=6.1.2"
 testfixtures = ">=6.15.0"
 
 [packages]
-zeppos-file-manager = ">=0.0.25"
-zeppos-data-manager = ">=0.0.14"
+zeppos-file-manager = ">=0.0.26"
+zeppos-data-manager = ">=0.0.16"
 
 [requires]
 python_version = "3.7"
