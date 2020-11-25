@@ -1,5 +1,5 @@
-from zeppos_bcpy.sql_statement import SqlStatement
-from zeppos_bcpy.sql_cmd import SqlCmd
+from zeppos_bcpy.sql_table import SqlTable
+from deprecated import deprecated
 
 class SqlConfiguration:
     def __init__(self, server_type, server_name, database_name, schema_name, table_name,
@@ -12,11 +12,21 @@ class SqlConfiguration:
         self.username = username
         self.password = password
 
+    @deprecated(version='0.0.20', reason="""
+        This method is deprecated
+        You should use:
+            from zeppos_bcpy.sql_table import SqlTable
+            
+            SqlTable.create(sql_configuration=SqlConfiguration(...), columns_dict=[...], using_existing=False  
+    """)
     def create(self, columns_dict, use_existing=False):
-        if use_existing:
-            return True
+        return \
+            SqlTable.create(
+                sql_configuration=self,
+                column_dict=columns_dict,
+                use_existing=use_existing
+            )
 
-        create_table_sql = \
-            SqlStatement.get_table_drop_and_create_statement(self.schema_name, self.table_name, columns_dict)
-        return SqlCmd.execute(self.server_name, self.database_name, create_table_sql)
-
+    def get_pyodbc_connection_string(self, odbc_version=17):
+        return f"DRIVER={{ODBC Driver {odbc_version} for SQL Server}}; SERVER={self.server_name}; " \
+               f"DATABASE={self.database_name}; Trusted_Connection=yes;"

@@ -15,9 +15,10 @@ twine = ">=3.2.0"
 python-decouple = ">=3.3"
 pytest = ">=6.1.2"
 testfixtures = ">=6.15.0"
+pyodbc = ">=4.0.30"
 
 [packages]
-zeppos-file-manager = ">=0.0.26"
+zeppos-file-manager = ">=0.0.27"
 zeppos-data-manager = ">=0.0.16"
 
 [requires]
