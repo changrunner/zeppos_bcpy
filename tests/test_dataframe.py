@@ -17,12 +17,13 @@ class TestTheProjectMethods(unittest.TestCase):
             schema_name="dbo",
             table_name="staging_test"
         )
+        dataframe = Dataframe.to_sqlserver_creating_instance(df_expected, sql_configuration)
         self.assertEqual("<class 'zeppos_bcpy.dataframe.Dataframe'>",
-                         str(type(Dataframe.to_sqlserver_creating_instance(df_expected, sql_configuration))))
-        df_actual = pd.read_sql("select seconds, minutes from dbo.staging_test",
+                         str(type(dataframe)))
+        df_actual = pd.read_sql("select SECONDS, MINUTES from dbo.staging_test",
                                 pyodbc.connect(r'DRIVER={ODBC Driver 13 for SQL Server}; SERVER=localhost\sqlexpress; DATABASE=master; Trusted_Connection=yes;'))
-        DfCleaner.clean_column_names_in_place(df_actual)
-        assert_frame_equal(df_expected, df_actual)
+        df_expected = df_expected[['SECONDS', 'MINUTES']]
+        assert_frame_equal(df_actual, df_expected)
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ from zeppos_bcpy.bcp_temp_csv_file import BcpTempCsvFile
 from zeppos_bcpy.bcp import Bcp
 from zeppos_data_manager.df_cleaner import DfCleaner
 from zeppos_bcpy.sql_table import SqlTable
+from datetime import datetime
 
 class Dataframe:
     def __init__(self, sql_configuration):
@@ -18,15 +19,19 @@ class Dataframe:
 
     @staticmethod
     def to_sqlserver_creating_instance(
-            pandas_dataframe, sql_configuration, index=False, discover_data_type=False, use_existing=False, batch_size=10000):
+            pandas_dataframe, sql_configuration, index=False, discover_data_type=False, use_existing=False,
+            batch_size=10000, audit_date=datetime.utcnow()):
         dataframe = Dataframe(sql_configuration)
-        dataframe.to_sqlserver(pandas_dataframe, index, discover_data_type, use_existing, batch_size)
+        dataframe.to_sqlserver(pandas_dataframe, index, discover_data_type, use_existing, batch_size, audit_date)
         return dataframe
 
     def to_sqlserver(self, pandas_dataframe, index=False, discover_data_type=False,
-                     use_existing=False, batch_size=10000):
+                     use_existing=False, batch_size=10000, audit_date=datetime.utcnow()):
         # set properties first
-        self.pandas_dataframe = Dataframe._conform_pandas_dataframe(pandas_dataframe)
+        self.pandas_dataframe = \
+            Dataframe._conform_pandas_dataframe(
+                Dataframe._add_audit_fields(pandas_dataframe, audit_date)
+            )
         self.index = index
         self.discover_data_type = discover_data_type
         self.use_existing = use_existing
@@ -44,4 +49,9 @@ class Dataframe:
     @staticmethod
     def _conform_pandas_dataframe(pandas_dataframe):
         DfCleaner.clean_column_names_in_place(pandas_dataframe)
+        return pandas_dataframe
+
+    @staticmethod
+    def _add_audit_fields(pandas_dataframe, audit_date):
+        pandas_dataframe['AUDIT_UTC_CREATE_DATETIME'] = audit_date
         return pandas_dataframe
