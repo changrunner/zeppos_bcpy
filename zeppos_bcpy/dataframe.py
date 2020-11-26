@@ -53,5 +53,5 @@ class Dataframe:
 
     @staticmethod
     def _add_audit_fields(pandas_dataframe, audit_date):
-        pandas_dataframe['AUDIT_UTC_CREATE_DATETIME'] = audit_date
+        pandas_dataframe['AUDIT_CREATE_UTC_DATETIME'] = audit_date
         return pandas_dataframe
