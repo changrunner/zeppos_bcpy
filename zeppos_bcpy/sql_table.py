@@ -6,7 +6,7 @@ import pyodbc
 class SqlTable:
     @staticmethod
     def create(sql_configuration, column_dict, use_existing=False):
-        if use_existing:
+        if use_existing and SqlTable._does_table_exist(sql_configuration):
             return True
 
         create_table_sql = \
