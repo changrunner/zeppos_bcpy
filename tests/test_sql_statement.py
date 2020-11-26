@@ -21,6 +21,10 @@ class TestTheProjectMethods(unittest.TestCase):
         self.assertEqual(SqlStatement.get_table_drop_and_create_statement("dbo", "table", df.dtypes.to_dict()),
                          "drop table if exists [dbo].[table]\ncreate table [dbo].[table] ([seconds] varchar(max), [minutes] varchar(max))")
 
+    def test_get_does_table_exist_statement_method(self):
+        self.assertEqual("select count(1) as record_count from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'dbo' and TABLE_NAME = 'test'",
+                         SqlStatement.get_does_table_exist_statement('dbo', 'test'))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -26,6 +26,13 @@ class TestTheProjectMethods(unittest.TestCase):
                                 pyodbc.connect(r'DRIVER={ODBC Driver 13 for SQL Server}; SERVER=localhost\sqlexpress; DATABASE=master; Trusted_Connection=yes;'))
         self.assertEqual(1, next(df_actual.iterrows())[1]['record_count'])
 
+    def test__does_table_exist_method(self):
+        self.assertEqual(True,
+                         SqlTable._does_table_exist(
+                             SqlConfiguration("microsoft", r"localhost\sqlexpress", "master", "dbo", "spt_fallback_db"),
+                         )
+                         )
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -25,3 +25,9 @@ class SqlStatement:
         return SqlStatement.get_table_drop_statement(schema_name, table_name) + \
                "\n" + \
                SqlStatement.get_table_create_statement(schema_name, table_name, column_dict, discover_data_type)
+
+    @staticmethod
+    def get_does_table_exist_statement(schema_name, table_name):
+        return f"select count(1) as record_count " \
+               f"from INFORMATION_SCHEMA.TABLES " \
+               f"where TABLE_SCHEMA = '{schema_name}' and TABLE_NAME = '{table_name}'"

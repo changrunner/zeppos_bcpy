@@ -1,5 +1,7 @@
 from zeppos_bcpy.sql_statement import SqlStatement
 from zeppos_bcpy.sql_cmd import SqlCmd
+import pandas as pd
+import pyodbc
 
 class SqlTable:
     @staticmethod
@@ -18,3 +20,11 @@ class SqlTable:
             database_name=sql_configuration.database_name,
             command=create_table_sql
         )
+
+    @staticmethod
+    def _does_table_exist(sql_configuration):
+        df = pd.read_sql(
+            SqlStatement.get_does_table_exist_statement(sql_configuration.schema_name, sql_configuration.table_name),
+            pyodbc.connect(sql_configuration.get_pyodbc_connection_string())
+        )
+        return next(df.iterrows())[1]['record_count'] > 0
