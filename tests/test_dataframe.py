@@ -5,6 +5,8 @@ import pandas as pd
 import pyodbc
 from pandas._testing import assert_frame_equal
 from zeppos_data_manager.df_cleaner import DfCleaner
+import os
+import shutil
 
 class TestTheProjectMethods(unittest.TestCase):
     def test_to_sqlserer_method(self):
@@ -24,6 +26,19 @@ class TestTheProjectMethods(unittest.TestCase):
                                 pyodbc.connect(r'DRIVER={ODBC Driver 13 for SQL Server}; SERVER=localhost\sqlexpress; DATABASE=master; Trusted_Connection=yes;'))
         df_expected = df_expected[['SECONDS', 'MINUTES']]
         assert_frame_equal(df_actual, df_expected)
+
+    def test_to_csv_method(self):
+        sql_configuration = SqlConfiguration(
+            server_type="microsoft",
+            server_name="localhost\\sqlexpress",
+            database_name="master",
+            schema_name="dbo",
+            table_name="spt_monitor"
+        )
+        dataframe = Dataframe.to_csv_creating_instance(sql_configuration=sql_configuration, csv_root_directory=r"c:\data")
+        self.assertEqual("<class 'zeppos_bcpy.dataframe.Dataframe'>",
+                         str(type(dataframe)))
+
 
 
 if __name__ == '__main__':

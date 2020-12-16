@@ -65,6 +65,13 @@ class TestTheProjectMethods(unittest.TestCase):
                          )
                          )
 
+    def test__get_column_names(self):
+        self.assertEqual(
+            SqlTable.get_column_names(
+                SqlConfiguration("microsoft", r"localhost\sqlexpress", "master", "dbo", "spt_monitor"),
+                "|"),
+        "connections|cpu_busy|idle|io_busy|lastrun|pack_errors|pack_received|pack_sent|total_errors|total_read|total_write")
+
     @staticmethod
     def _execute_sql(sql_statement):
         conn = pyodbc.connect("DRIVER={ODBC Driver 17 for SQL Server}; SERVER=localhost\sqlexpress; DATABASE=master; Trusted_Connection=yes;")

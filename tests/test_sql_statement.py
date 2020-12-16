@@ -1,6 +1,7 @@
 import unittest
 from zeppos_bcpy.sql_statement import SqlStatement
 import pandas as pd
+import os
 
 class TestTheProjectMethods(unittest.TestCase):
     def test_get_table_create_statement_method(self):
@@ -24,6 +25,10 @@ class TestTheProjectMethods(unittest.TestCase):
     def test_get_does_table_exist_statement_method(self):
         self.assertEqual("select count(1) as record_count from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'dbo' and TABLE_NAME = 'test'",
                          SqlStatement.get_does_table_exist_statement('dbo', 'test'))
+
+    def test_get_table_column_names(self):
+        self.assertEqual("SELECT column_names = STUFF( (SELECT distinct '|' + CAST((COLUMN_NAME) AS varchar(550)) [text()]FROM INFORMATION_SCHEMA.columns (nolock) WHERE table_schema = 'dbo' AND table_name = 'test'FOR XML PATH(''), TYPE) .value('.','NVARCHAR(MAX)'),1,2,' ')",
+                         SqlStatement.get_table_column_names("dbo", "test", "|"))
 
 
 if __name__ == '__main__':

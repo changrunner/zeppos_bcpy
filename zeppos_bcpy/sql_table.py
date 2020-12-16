@@ -28,3 +28,14 @@ class SqlTable:
             pyodbc.connect(sql_configuration.get_pyodbc_connection_string())
         )
         return next(df.iterrows())[1]['record_count'] > 0
+
+
+    @staticmethod
+    def get_column_names(sql_configuration, separator):
+        df = pd.read_sql(
+            SqlStatement.get_table_column_names(sql_configuration.schema_name, sql_configuration.table_name, separator),
+            pyodbc.connect(sql_configuration.get_pyodbc_connection_string())
+        )
+        return next(df.iterrows())[1]['column_names'].strip()
+
+

@@ -1,22 +1,19 @@
 from zeppos_file_manager.temp_file import TempFile
 from zeppos_bcpy.bcp_file_format import BcpFileFormat
 from zeppos_bcpy.bcp_temp_csv_file import BcpTempCsvFile
-from zeppos_bcpy.bcp import Bcp
+from zeppos_bcpy.bcp_in import BcpIn
+from zeppos_bcpy.bcp_out import BcpOut
 from zeppos_data_manager.df_cleaner import DfCleaner
 from zeppos_bcpy.sql_table import SqlTable
 from datetime import datetime
-from os import path
+from os import path, makedirs, remove
+from shutil import copyfileobj, move
 
 class Dataframe:
     def __init__(self, sql_configuration):
         # Intialize properties
         self.pandas_dataframe = None
         self.sql_configuration = sql_configuration
-        self.index = False
-        self.discover_data_type = False
-        self.use_existing = False
-        self.batch_size = 10000
-        self.sql_statement = None
 
     @staticmethod
     def to_sqlserver_creating_instance(
@@ -35,19 +32,45 @@ class Dataframe:
             Dataframe._conform_pandas_dataframe(
                 Dataframe._add_audit_fields(pandas_dataframe, audit_date, csv_full_file_name)
             )
-        self.index = index
-        self.discover_data_type = discover_data_type
-        self.use_existing = use_existing
-        self.batch_size = batch_size
 
-        bcp_file_format = BcpFileFormat.create_bcp_format_file_instance_from_dataframe(self.pandas_dataframe, TempFile().temp_full_file_name)
-        bcp_temp_csv_file = BcpTempCsvFile.write_df_to_csv_creating_instance(self.pandas_dataframe, bcp_file_format, self.index)
+        bcp_file_format = BcpFileFormat.create_bcp_format_file_instance_from_dataframe(self.pandas_dataframe , TempFile().temp_full_file_name)
+        bcp_temp_csv_file = BcpTempCsvFile.write_df_to_csv_creating_instance(self.pandas_dataframe , bcp_file_format, index)
 
-        SqlTable.create(self.sql_configuration, self.pandas_dataframe.dtypes.to_dict(), self.use_existing)
-        Bcp(self.sql_configuration, bcp_file_format, bcp_temp_csv_file, self.batch_size).execute()
+        SqlTable.create(self.sql_configuration, self.pandas_dataframe .dtypes.to_dict(), use_existing)
+        BcpIn(self.sql_configuration, bcp_file_format, bcp_temp_csv_file, batch_size).execute()
 
         bcp_temp_csv_file.remove_file()
         bcp_file_format.remove_file()
+
+    @staticmethod
+    def to_csv_creating_instance(sql_configuration, csv_root_directory, separator="|", batch_size=10000):
+        dataframe = Dataframe(sql_configuration)
+        dataframe.to_csv(csv_root_directory, separator, batch_size)
+        return dataframe
+
+    def to_csv(self, csv_root_directory, separator="|", batch_size=10000):
+        data_full_file_name = path.join(csv_root_directory, self.sql_configuration.server_name_clean,
+                                        self.sql_configuration.database_name,
+                                        f'{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}__'
+                                        f'{self.sql_configuration.schema_name}__'
+                                        f'{self.sql_configuration.table_name}.csv')
+        makedirs(path.dirname(data_full_file_name), exist_ok=True)
+
+        BcpOut(self.sql_configuration, data_full_file_name, separator, batch_size).execute()
+        Dataframe._add_header_row(
+            header=SqlTable.get_column_names(self.sql_configuration, separator),
+            data_full_file_name=data_full_file_name
+        )
+
+    @staticmethod
+    def _add_header_row(header, data_full_file_name):
+        temp_file = data_full_file_name + ".tmp"
+        with open(data_full_file_name, 'r') as old:
+            with open(temp_file, 'w') as new:
+                new.write(header + "\n")
+                copyfileobj(old, new)
+        remove(data_full_file_name)
+        move(temp_file, data_full_file_name)
 
     @staticmethod
     def _conform_pandas_dataframe(pandas_dataframe):

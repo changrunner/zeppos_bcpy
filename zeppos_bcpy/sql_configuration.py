@@ -30,3 +30,7 @@ class SqlConfiguration:
     def get_pyodbc_connection_string(self, odbc_version=17):
         return f"DRIVER={{ODBC Driver {odbc_version} for SQL Server}}; SERVER={self.server_name}; " \
                f"DATABASE={self.database_name}; Trusted_Connection=yes;"
+
+    @property
+    def server_name_clean(self):
+        return self.server_name.replace("\\", "_").replace("/", "_")

@@ -31,3 +31,15 @@ class SqlStatement:
         return f"select count(1) as record_count " \
                f"from INFORMATION_SCHEMA.TABLES " \
                f"where TABLE_SCHEMA = '{schema_name}' and TABLE_NAME = '{table_name}'"
+
+    @staticmethod
+    def get_table_column_names(schema_name, table_name, separator):
+        return f"SELECT column_names = " \
+               f"STUFF( " \
+               f"(SELECT distinct '{separator}' + CAST((COLUMN_NAME) AS varchar(550)) [text()]" \
+               f"FROM INFORMATION_SCHEMA.columns (nolock) " \
+               f"WHERE table_schema = '{schema_name}' " \
+               f"AND table_name = '{table_name}'" \
+               f"FOR XML PATH(''), TYPE) " \
+               f".value('.','NVARCHAR(MAX)'),1,1,' ')"
+
