@@ -13,6 +13,7 @@ class Dataframe:
     def __init__(self, sql_configuration):
         # Intialize properties
         self.pandas_dataframe = None
+        self.csv_full_file_name = None
         self.sql_configuration = sql_configuration
 
     @staticmethod
@@ -49,17 +50,18 @@ class Dataframe:
         return dataframe
 
     def to_csv(self, csv_root_directory, separator="|", batch_size=10000):
-        data_full_file_name = path.join(csv_root_directory, self.sql_configuration.server_name_clean,
-                                        self.sql_configuration.database_name,
-                                        f'{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}__'
-                                        f'{self.sql_configuration.schema_name}__'
-                                        f'{self.sql_configuration.table_name}.csv')
-        makedirs(path.dirname(data_full_file_name), exist_ok=True)
+        # set properties first
+        self.csv_full_file_name = path.join(csv_root_directory, self.sql_configuration.server_name_clean,
+                                            self.sql_configuration.database_name,
+                                            f'{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}__'
+                                            f'{self.sql_configuration.schema_name}__'
+                                            f'{self.sql_configuration.table_name}.csv')
+        makedirs(path.dirname(self.csv_full_file_name), exist_ok=True)
 
-        BcpOut(self.sql_configuration, data_full_file_name, separator, batch_size).execute()
+        BcpOut(self.sql_configuration, self.csv_full_file_name, separator, batch_size).execute()
         Dataframe._add_header_row(
             header=SqlTable.get_column_names(self.sql_configuration, separator),
-            data_full_file_name=data_full_file_name
+            data_full_file_name=self.csv_full_file_name
         )
 
     @staticmethod
