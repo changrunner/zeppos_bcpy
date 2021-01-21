@@ -35,13 +35,13 @@ class TestTheProjectMethods(unittest.TestCase):
             server_name="localhost\\sqlexpress",
             database_name="master",
             schema_name="dbo",
-            table_name="staging_test"
+            table_name="staging_test5"
         )
         additional_static_data_dict = {'static_field1': 'some info 1', 'static_field2': 'some info 2'}
         dataframe = Dataframe.to_sqlserver_creating_instance(df_expected, sql_configuration, additional_static_data_dict)
         self.assertEqual("<class 'zeppos_bcpy.dataframe.Dataframe'>",
                          str(type(dataframe)))
-        df_actual = pd.read_sql("select SECONDS, MINUTES, STATIC_FIELD1, STATIC_FIELD2 from dbo.staging_test",
+        df_actual = pd.read_sql("select SECONDS, MINUTES, STATIC_FIELD1, STATIC_FIELD2 from dbo.staging_test5",
                                 pyodbc.connect(r'DRIVER={ODBC Driver 13 for SQL Server}; SERVER=localhost\sqlexpress; DATABASE=master; Trusted_Connection=yes;'))
         df_expected = df_expected[['SECONDS', 'MINUTES', 'STATIC_FIELD1', 'STATIC_FIELD2']]
         assert_frame_equal(df_actual, df_expected)
