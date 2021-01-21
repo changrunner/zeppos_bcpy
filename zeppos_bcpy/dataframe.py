@@ -39,7 +39,6 @@ class Dataframe:
                     csv_full_file_name=csv_full_file_name
                 )
             )
-        print(self.pandas_dataframe)
         bcp_file_format = BcpFileFormat.create_bcp_format_file_instance_from_dataframe(self.pandas_dataframe, TempFile().temp_full_file_name)
         bcp_temp_csv_file = BcpTempCsvFile.write_df_to_csv_creating_instance(self.pandas_dataframe, bcp_file_format, index)
 
