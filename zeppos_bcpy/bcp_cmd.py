@@ -35,6 +35,7 @@ class BcpCmd:
                        f'-t{separator}',
                        '-S', sql_table.server_name,
                        '-b', str(batch_size),
+                       '-r \r\n'
                        ] + auth
 
         AppLogger.logger.debug(f"bcp command: {bcp_command}")

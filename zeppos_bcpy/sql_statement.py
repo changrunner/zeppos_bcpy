@@ -36,10 +36,11 @@ class SqlStatement:
     def get_table_column_names(schema_name, table_name, separator):
         return f"SELECT column_names = " \
                f"STUFF( " \
-               f"(SELECT distinct '{separator}' + CAST((COLUMN_NAME) AS varchar(550)) [text()]" \
+               f"(SELECT '{separator}' + CAST((COLUMN_NAME) AS varchar(550)) [text()]" \
                f"FROM INFORMATION_SCHEMA.columns (nolock) " \
                f"WHERE table_schema = '{schema_name}' " \
                f"AND table_name = '{table_name}'" \
+               f"ORDER BY ORDINAL_POSITION " \
                f"FOR XML PATH(''), TYPE) " \
                f".value('.','NVARCHAR(MAX)'),1,1,' ')"
 
