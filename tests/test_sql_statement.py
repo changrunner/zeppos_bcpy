@@ -27,7 +27,7 @@ class TestTheProjectMethods(unittest.TestCase):
                          SqlStatement.get_does_table_exist_statement('dbo', 'test'))
 
     def test_get_table_column_names(self):
-        self.assertEqual("SELECT column_names = STUFF( (SELECT distinct '|' + CAST((COLUMN_NAME) AS varchar(550)) [text()]FROM INFORMATION_SCHEMA.columns (nolock) WHERE table_schema = 'dbo' AND table_name = 'test'FOR XML PATH(''), TYPE) .value('.','NVARCHAR(MAX)'),1,2,' ')",
+        self.assertEqual("SELECT column_names = STUFF( (SELECT '|' + CAST((COLUMN_NAME) AS varchar(550)) [text()]FROM INFORMATION_SCHEMA.columns (nolock) WHERE table_schema = 'dbo' AND table_name = 'test'ORDER BY ORDINAL_POSITION FOR XML PATH(''), TYPE) .value('.','NVARCHAR(MAX)'),1,1,' ')",
                          SqlStatement.get_table_column_names("dbo", "test", "|"))
 
 

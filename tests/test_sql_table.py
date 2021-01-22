@@ -70,7 +70,7 @@ class TestTheProjectMethods(unittest.TestCase):
             SqlTable.get_column_names(
                 SqlConfiguration("microsoft", r"localhost\sqlexpress", "master", "dbo", "spt_monitor"),
                 "|"),
-        "connections|cpu_busy|idle|io_busy|lastrun|pack_errors|pack_received|pack_sent|total_errors|total_read|total_write")
+        "lastrun|cpu_busy|io_busy|idle|pack_received|pack_sent|connections|pack_errors|total_read|total_write|total_errors")
 
     @staticmethod
     def _execute_sql(sql_statement):
