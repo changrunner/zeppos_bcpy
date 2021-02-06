@@ -17,7 +17,6 @@ class BcpCmd:
                        '-F', '2'  # file_has_header_line:
                        ] + auth
 
-        AppLogger.logger.debug(f"bcp command: {bcp_command}")
         AppLogger.logger.debug(f"bcp command: {' '.join(bcp_command)}")
 
         return bcp_command
@@ -38,7 +37,6 @@ class BcpCmd:
                        '-r \r\n'
                        ] + auth
 
-        AppLogger.logger.debug(f"bcp command: {bcp_command}")
         AppLogger.logger.debug(f"bcp command: {' '.join(bcp_command)}")
 
         return bcp_command
