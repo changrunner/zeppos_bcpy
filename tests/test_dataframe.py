@@ -11,9 +11,11 @@ import shutil
 
 class TestTheProjectMethods(unittest.TestCase):
     def setUp(self):
-        AppLogger.configure_and_get_logger(
-            logger_name='test_simple')
-        AppLogger.set_debug_level()
+        pass
+        # Some how this code is blocking the pytest
+        # AppLogger.configure_and_get_logger(
+        #     logger_name='test_simple')
+        # AppLogger.set_debug_level()
 
     def test_to_sqlserer_method(self):
         df_expected = pd.DataFrame({'seconds': ["3600"], 'minutes': ["10"]}, columns=['seconds', 'minutes'])
