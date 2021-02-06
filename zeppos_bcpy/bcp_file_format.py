@@ -1,5 +1,7 @@
 from os import remove, linesep
 from zeppos_data_manager.data_cleaner import DataCleaner
+from zeppos_logging.app_logger import AppLogger
+
 
 class BcpFileFormat:
     def __init__(self, pandas_dataframe, temp_full_file_name, sep='|', quote_char='', line_terminator=linesep):
@@ -28,6 +30,8 @@ class BcpFileFormat:
                 {self._get_bcp_format_for_columns()}
             """, remove_last_line_seperator=False
         )
+        AppLogger.logger.debug(f"bcp_format: {bcp_format}")
+
         with open(self.file_format_full_file_name, 'w') as fl:
             fl.write(bcp_format)
 
