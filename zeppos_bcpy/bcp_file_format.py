@@ -30,8 +30,8 @@ class BcpFileFormat:
                 {self._get_bcp_format_for_columns()}
             """, remove_last_line_seperator=False
         )
-        AppLogger.logger.debug(f"bcp_format: {bcp_format}")
-
+        AppLogger.logger.debug(f"bcp_format: \n{bcp_format}")
+        AppLogger.logger.debug(f"Writting file_format file: {self.file_format_full_file_name}")
         with open(self.file_format_full_file_name, 'w') as fl:
             fl.write(bcp_format)
 
@@ -59,4 +59,5 @@ class BcpFileFormat:
         return column_format
 
     def remove_file(self):
+        AppLogger.logger.debug(f"Remove bcp fileformat file: {self.file_format_full_file_name}")
         remove(self.file_format_full_file_name)

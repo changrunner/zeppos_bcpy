@@ -4,11 +4,17 @@ from zeppos_bcpy.sql_configuration import SqlConfiguration
 import pandas as pd
 import pyodbc
 from pandas._testing import assert_frame_equal
+from zeppos_logging.app_logger import AppLogger
 from zeppos_data_manager.df_cleaner import DfCleaner
 import os
 import shutil
 
 class TestTheProjectMethods(unittest.TestCase):
+    def setUp(self):
+        AppLogger.configure_and_get_logger(
+            logger_name='test_simple')
+        AppLogger.set_debug_level()
+
     def test_to_sqlserer_method(self):
         df_expected = pd.DataFrame({'seconds': ["3600"], 'minutes': ["10"]}, columns=['seconds', 'minutes'])
 
