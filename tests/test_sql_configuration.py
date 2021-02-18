@@ -23,6 +23,30 @@ class TestTheProjectMethods(unittest.TestCase):
         self.assertEqual("DRIVER={ODBC Driver 17 for SQL Server}; SERVER=localhost\sqlexpress; DATABASE=master; Trusted_Connection=yes;",
                          sql_configuration.get_pyodbc_connection_string())
 
+    def test_1__validate_and_augment_if_needed_sql_configuration_method(self):
+       sql_configuration_original = SqlConfiguration(
+                                server_type="microsoft",
+                                server_name="localhost\\sqlexpress",
+                                database_name="master",
+                                schema_name="dbo",
+                                table_name="test_table"
+                            )
+       self.assertEqual("test_table",
+                        sql_configuration_original.validate_and_augment(file_name_without_extension="temp").table_name)
+       self.assertEqual("test_table", sql_configuration_original.table_name)
+
+    def test_2__validate_and_augment_if_needed_sql_configuration_method(self):
+        sql_configuration_original = SqlConfiguration(
+            server_type="microsoft",
+            server_name="localhost\\sqlexpress",
+            database_name="master",
+            schema_name="dbo",
+            table_name=None
+        )
+        self.assertEqual("temp",
+                         sql_configuration_original.validate_and_augment(file_name_without_extension="temp").table_name)
+        self.assertEqual(None, sql_configuration_original.table_name)
+
 
 if __name__ == '__main__':
     unittest.main()

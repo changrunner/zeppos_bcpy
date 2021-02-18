@@ -1,5 +1,7 @@
 from zeppos_bcpy.sql_table import SqlTable
 from deprecated import deprecated
+import copy
+
 
 class SqlConfiguration:
     def __init__(self, server_type, server_name, database_name, schema_name, table_name,
@@ -34,3 +36,16 @@ class SqlConfiguration:
     @property
     def server_name_clean(self):
         return self.server_name.replace("\\", "_").replace("/", "_")
+
+    def validate_and_augment(self, file_name_without_extension):
+        """
+        It is possible the table_name property of the sql_configuration is None.
+        If that is the case, we will be using the file name without extension of the csv file
+        :param file_name_without_extension: The name of the file without extension.
+                                            This will become the table_name if table_name is null or None
+        :return: shallow copy of sql_configuration
+        """
+        return_sql_configuration = copy.copy(self)  # shallow copy needed.
+        if not return_sql_configuration.table_name:  # null or None table_name
+            return_sql_configuration.table_name = file_name_without_extension
+        return return_sql_configuration
