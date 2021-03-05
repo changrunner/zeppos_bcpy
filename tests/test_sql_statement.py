@@ -7,12 +7,12 @@ class TestTheProjectMethods(unittest.TestCase):
     def test_get_table_create_statement_method(self):
         df = pd.DataFrame({'seconds': [3600], 'minutes': [10]}, columns=['seconds', 'minutes'])
         self.assertEqual(SqlStatement.get_table_create_statement("dbo", "staging_test", df.dtypes.to_dict()),
-                         "create table [dbo].[staging_test] ([seconds] varchar(max), [minutes] varchar(max))")
+                         "create table [dbo].[staging_test] ([seconds] nvarchar(max), [minutes] nvarchar(max))")
 
     def test__get_column_type_method(self):
         df = pd.DataFrame({'seconds': [3600], 'minutes': ["10"]}, columns=['seconds', 'minutes'])
-        self.assertEqual(SqlStatement._get_column_type(df.dtypes[0]), "varchar(max)")
-        self.assertEqual(SqlStatement._get_column_type(df.dtypes[1]), "varchar(max)")
+        self.assertEqual(SqlStatement._get_column_type(df.dtypes[0]), "nvarchar(max)")
+        self.assertEqual(SqlStatement._get_column_type(df.dtypes[1]), "nvarchar(max)")
 
     def test_get_table_drop_statement_method(self):
         self.assertEqual(SqlStatement.get_table_drop_statement('dbo', 'table'), "drop table if exists [dbo].[table]")
@@ -20,7 +20,7 @@ class TestTheProjectMethods(unittest.TestCase):
     def test_get_table_drop_and_create_statement_method(self):
         df = pd.DataFrame({'seconds': [3600], 'minutes': [10]}, columns=['seconds', 'minutes'])
         self.assertEqual(SqlStatement.get_table_drop_and_create_statement("dbo", "table", df.dtypes.to_dict()),
-                         "drop table if exists [dbo].[table]\ncreate table [dbo].[table] ([seconds] varchar(max), [minutes] varchar(max))")
+                         "drop table if exists [dbo].[table]\ncreate table [dbo].[table] ([seconds] nvarchar(max), [minutes] nvarchar(max))")
 
     def test_get_does_table_exist_statement_method(self):
         self.assertEqual("select count(1) as record_count from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'dbo' and TABLE_NAME = 'test'",

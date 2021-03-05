@@ -22,4 +22,4 @@ zeppos-data-manager = ">=0.0.16"
 pyodbc = ">=4.0.30"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"

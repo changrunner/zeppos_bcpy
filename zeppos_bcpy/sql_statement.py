@@ -12,9 +12,9 @@ class SqlStatement:
     @staticmethod
     def _get_column_type(column_type, discover_data_type=False):
         if not discover_data_type:
-            return "varchar(max)"
+            return "nvarchar(max)"
 
-        return "varchar(max)"
+        return "nvarchar(max)"
 
     @staticmethod
     def get_table_drop_statement(schema_name, table_name):
